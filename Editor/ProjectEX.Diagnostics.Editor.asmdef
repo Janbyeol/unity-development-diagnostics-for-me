@@ -1,0 +1,18 @@
+{
+    "name": "ProjectEX.Diagnostics.Editor",
+    "rootNamespace": "ProjectEX.Editor",
+    "references": [
+        "GUID:3fb0b6acc8f84cef9a683234d24da0b9"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

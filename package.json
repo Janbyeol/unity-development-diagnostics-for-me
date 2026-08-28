@@ -1,0 +1,20 @@
+{
+    "name": "com.projectex.development-diagnostics",
+    "version": "0.1.0",
+    "displayName": "Project EX Development Diagnostics",
+    "description": "Development-only Assert, structured logging, popup, and extensible Debug Window tools for Unity projects.",
+    "unity": "6000.0",
+    "type": "tool",
+    "hideInEditor": false,
+    "dependencies": {},
+    "keywords": [
+        "debugging",
+        "assert",
+        "logging",
+        "editor"
+    ],
+    "author": {
+        "name": "Project EX"
+    },
+    "license": "UNLICENSED"
+}
