@@ -1,9 +1,9 @@
 using System;
-using ProjectEX.Debugging.Assertions;
-using ProjectEX.Debugging.Logging;
+using DevelopmentDiagnostics.Assertions;
+using DevelopmentDiagnostics.Logging;
 using Object = UnityEngine.Object;
 
-namespace ProjectEX.Editor.ProjectDebug
+namespace DevelopmentDiagnostics.Editor.Debug
 {
     internal sealed class ProjectDebugEntry
     {

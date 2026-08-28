@@ -2,10 +2,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace ProjectEX.Editor.ProjectAssertions
+namespace DevelopmentDiagnostics.Editor.Assertions
 {
     [FilePath(
-        "ProjectSettings/ProjectEXAssertionSettings.asset",
+        "ProjectSettings/DevelopmentDiagnosticsSettings.asset",
         FilePathAttribute.Location.ProjectFolder)]
     internal sealed class ProjectAssertSettings : ScriptableSingleton<ProjectAssertSettings>
     {
@@ -13,8 +13,8 @@ namespace ProjectEX.Editor.ProjectAssertions
         [SerializeField] private bool m_pausePlayModeBeforePopup = true;
         [SerializeField] private bool m_assertLogToConsole;
         [SerializeField] private bool m_projectLogToConsole;
-        [SerializeField] private float m_popupWidth = 780f;
-        [SerializeField] private float m_popupHeight = 500f;
+        [SerializeField] private float m_popupWidth = 1280f;
+        [SerializeField] private float m_popupHeight = 720f;
         [SerializeField] private int m_messageFontSize = 18;
 
         internal ProjectAssertPopupMode PopupMode => m_popupMode;

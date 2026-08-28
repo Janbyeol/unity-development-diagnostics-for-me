@@ -1,7 +1,7 @@
 {
-    "name": "com.projectex.development-diagnostics",
+    "name": "com.github.janbyeol.development-diagnostics",
     "version": "0.1.0",
-    "displayName": "Project EX Development Diagnostics",
+    "displayName": "Unity Development Diagnostics",
     "description": "Development-only Assert, structured logging, popup, and extensible Debug Window tools for Unity projects.",
     "unity": "6000.0",
     "type": "tool",
@@ -14,7 +14,8 @@
         "editor"
     ],
     "author": {
-        "name": "Project EX"
+        "name": "Janbyeol",
+        "url": "https://github.com/Janbyeol"
     },
     "license": "UNLICENSED"
 }

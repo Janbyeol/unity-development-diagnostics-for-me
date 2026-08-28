@@ -1,7 +1,7 @@
 using System;
 using Object = UnityEngine.Object;
 
-namespace ProjectEX.Debugging.Logging
+namespace DevelopmentDiagnostics.Logging
 {
     /// <summary>
     ///     한 번의 Project Log 기록과 호출 위치를 전달하는 값 타입이다.

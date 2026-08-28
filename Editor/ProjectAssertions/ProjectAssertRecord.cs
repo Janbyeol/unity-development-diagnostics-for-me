@@ -1,11 +1,11 @@
 using System;
-using ProjectEX.Debugging.Assertions;
+using DevelopmentDiagnostics.Assertions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 
-namespace ProjectEX.Editor.ProjectAssertions
+namespace DevelopmentDiagnostics.Editor.Assertions
 {
     [Serializable]
     internal sealed class ProjectAssertRecord

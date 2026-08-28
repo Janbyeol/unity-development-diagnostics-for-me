@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using ProjectEX.Debugging.Assertions;
+using DevelopmentDiagnostics.Assertions;
 using UnityEditor;
 using UnityEngine;
 
-namespace ProjectEX.Editor.ProjectAssertions
+namespace DevelopmentDiagnostics.Editor.Assertions
 {
     internal static class ProjectAssertSettingsProvider
     {
-        private const string k_SettingsPath = "Project/Project EX/Assertions";
+        private const string k_SettingsPath = "Project/Development Diagnostics/Assertions";
 
         [SettingsProvider]
         private static SettingsProvider CreateSettingsProvider()
@@ -18,7 +18,7 @@ namespace ProjectEX.Editor.ProjectAssertions
                 guiHandler = DrawSettings,
                 keywords = new HashSet<string>(new string[]
                 {
-                    "Project EX",
+                    "Development Diagnostics",
                     "Assert",
                     "Assertions",
                     "Critical",
@@ -32,7 +32,7 @@ namespace ProjectEX.Editor.ProjectAssertions
             return provider;
         }
 
-        [MenuItem("Tools/Project EX/Assertion Settings")]
+        [MenuItem("Tools/Development Diagnostics/Assertion Settings")]
         private static void OpenSettings()
         {
             SettingsService.OpenProjectSettings(k_SettingsPath);

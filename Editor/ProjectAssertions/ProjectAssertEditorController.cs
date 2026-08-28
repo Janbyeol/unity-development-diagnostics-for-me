@@ -1,18 +1,18 @@
 using System.Collections.Generic;
-using ProjectEX.Debugging.Assertions;
-using ProjectEX.Debugging.Logging;
+using DevelopmentDiagnostics.Assertions;
+using DevelopmentDiagnostics.Logging;
 using UnityEditor;
 using UnityEngine;
 
-namespace ProjectEX.Editor.ProjectAssertions
+namespace DevelopmentDiagnostics.Editor.Assertions
 {
     [InitializeOnLoad]
     internal static class ProjectAssertEditorController
     {
         private const string k_PendingExitFailuresSessionKey =
-            "ProjectEX.Assertions.PendingPlayExitFailures";
+            "DevelopmentDiagnostics.Assertions.PendingPlayExitFailures";
         private const string k_PlayModeExitInProgressSessionKey =
-            "ProjectEX.Assertions.PlayModeExitInProgress";
+            "DevelopmentDiagnostics.Assertions.PlayModeExitInProgress";
 
         private static readonly HashSet<string> IgnoredCallSites = new HashSet<string>();
         private static readonly HashSet<string> PendingCallSites = new HashSet<string>();

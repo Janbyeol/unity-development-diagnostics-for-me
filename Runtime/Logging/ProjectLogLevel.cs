@@ -1,4 +1,4 @@
-namespace ProjectEX.Debugging.Logging
+namespace DevelopmentDiagnostics.Logging
 {
     /// <summary>
     ///     Project Log 기록의 중요도를 나타낸다.

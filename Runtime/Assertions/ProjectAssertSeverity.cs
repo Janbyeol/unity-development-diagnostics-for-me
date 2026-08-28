@@ -1,4 +1,4 @@
-namespace ProjectEX.Debugging.Assertions
+namespace DevelopmentDiagnostics.Assertions
 {
     /// <summary>
     /// Assert 실패가 게임 실행에 미치는 심각도를 나타낸다.

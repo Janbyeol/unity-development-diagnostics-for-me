@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 
-namespace ProjectEX.Editor.ProjectDebug
+namespace DevelopmentDiagnostics.Editor.Debug
 {
     [Serializable]
     internal sealed class ProjectDebugRecord

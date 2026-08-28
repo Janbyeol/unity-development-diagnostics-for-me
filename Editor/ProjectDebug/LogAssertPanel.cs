@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace ProjectEX.Editor.ProjectDebug
+namespace DevelopmentDiagnostics.Editor.Debug
 {
     internal sealed class LogAssertPanel : IDebugPanel
     {

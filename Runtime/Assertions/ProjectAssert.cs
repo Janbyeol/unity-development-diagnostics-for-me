@@ -6,10 +6,10 @@ using System.Text;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 
-namespace ProjectEX.Debugging.Assertions
+namespace DevelopmentDiagnostics.Assertions
 {
     /// <summary>
-    ///     Project EX의 코드·프리팹·씬 구성 오류를 개발 중에 발견하는 공용 Assert 진입점이다.
+    ///     Unity 프로젝트의 코드·프리팹·씬 구성 오류를 개발 중에 발견하는 공용 Assert 진입점이다.
     /// </summary>
     public static class ProjectAssert
     {

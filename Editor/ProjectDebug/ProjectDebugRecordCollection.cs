@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace ProjectEX.Editor.ProjectDebug
+namespace DevelopmentDiagnostics.Editor.Debug
 {
     [Serializable]
     internal sealed class ProjectDebugRecordCollection

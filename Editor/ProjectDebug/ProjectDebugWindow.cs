@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace ProjectEX.Editor.ProjectDebug
+namespace DevelopmentDiagnostics.Editor.Debug
 {
     /// <summary>
     ///     설치된 디버그 패널의 생명주기와 화면 출력을 소유하는 공용 Editor Window입니다.
@@ -17,11 +17,11 @@ namespace ProjectEX.Editor.ProjectDebug
         private IDebugPanel m_activePanel;
         private string[] m_panelNames = System.Array.Empty<string>();
 
-        [MenuItem("Tools/Project EX/Debug Window")]
+        [MenuItem("Tools/Development Diagnostics/Debug Window")]
         private static void OpenWindow()
         {
             ProjectDebugWindow window = GetWindow<ProjectDebugWindow>();
-            window.titleContent = new GUIContent("Project Debug");
+            window.titleContent = new GUIContent("Dev Diagnostics");
             window.minSize = new Vector2(760f, 520f);
             window.Show();
         }

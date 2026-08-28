@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ProjectEX.Debugging.Assertions
+namespace DevelopmentDiagnostics.Assertions
 {
     /// <summary>
     /// 한 번의 Assert 실패와 발생 위치를 전달하는 값 타입이다.

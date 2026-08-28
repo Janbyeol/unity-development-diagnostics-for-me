@@ -13,8 +13,8 @@ Unity 개인 프로젝트에서 개발 중 상태 오류와 진단 로그를 빠
 ## 사용 예시
 
 ```csharp
-using ProjectEX.Debugging.Assertions;
-using ProjectEX.Debugging.Logging;
+using DevelopmentDiagnostics.Assertions;
+using DevelopmentDiagnostics.Logging;
 
 ProjectAssert.Critical(player != null, "Player 참조를 찾을 수 없습니다.", this);
 ProjectLog.Info("Player", "플레이어 초기화가 완료되었습니다.", this);
@@ -24,11 +24,11 @@ ProjectLog.Info("Player", "플레이어 초기화가 완료되었습니다.", th
 
 ## Debug Window 확장
 
-프로젝트의 `Editor` 폴더에서 `IDebugPanel`을 구현하면 `Tools > Project EX > Debug Window`에 자동 등록됩니다. 구현체에는 매개변수 없는 생성자가 필요하며 `Id`는 다른 패널과 중복될 수 없습니다.
+프로젝트의 `Editor` 폴더에서 `IDebugPanel`을 구현하면 `Tools > Development Diagnostics > Debug Window`에 자동 등록됩니다. 구현체에는 매개변수 없는 생성자가 필요하며 `Id`는 다른 패널과 중복될 수 없습니다.
 
 ## 어셈블리
 
-- `ProjectEX.Diagnostics.Runtime`: Assert와 Log 공용 API
-- `ProjectEX.Diagnostics.Editor`: 팝업, 설정, 수집기와 Debug Window
+- `DevelopmentDiagnostics.Runtime`: Assert와 Log 공용 API
+- `DevelopmentDiagnostics.Editor`: 팝업, 설정, 수집기와 Debug Window
 
 Editor 어셈블리는 Runtime만 참조하며 게임플레이 코드에는 의존하지 않습니다.

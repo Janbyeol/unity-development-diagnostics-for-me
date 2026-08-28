@@ -4,10 +4,10 @@ using System.Runtime.CompilerServices;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 
-namespace ProjectEX.Debugging.Logging
+namespace DevelopmentDiagnostics.Logging
 {
     /// <summary>
-    ///     Project EX의 개발 로그를 기록하는 공용 진입점이다.
+    ///     Unity 프로젝트의 개발 로그를 기록하는 공용 진입점이다.
     /// </summary>
     public static class ProjectLog
     {

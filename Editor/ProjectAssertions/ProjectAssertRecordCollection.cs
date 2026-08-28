@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace ProjectEX.Editor.ProjectAssertions
+namespace DevelopmentDiagnostics.Editor.Assertions
 {
     [Serializable]
     internal sealed class ProjectAssertRecordCollection

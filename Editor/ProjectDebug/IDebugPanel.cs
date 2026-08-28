@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ProjectEX.Editor.ProjectDebug
+namespace DevelopmentDiagnostics.Editor.Debug
 {
     /// <summary>
     ///     Debug Window에 표시되는 독립 기능 패널의 최소 생명주기와 화면 출력 계약입니다.

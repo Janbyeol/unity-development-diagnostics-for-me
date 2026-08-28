@@ -1,4 +1,4 @@
-namespace ProjectEX.Editor.ProjectAssertions
+namespace DevelopmentDiagnostics.Editor.Assertions
 {
     internal enum ProjectAssertPopupResult
     {

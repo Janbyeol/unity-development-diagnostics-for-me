@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using ProjectEX.Debugging.Assertions;
-using ProjectEX.Debugging.Logging;
+using DevelopmentDiagnostics.Assertions;
+using DevelopmentDiagnostics.Logging;
 using UnityEditor;
 using UnityEngine;
 
-namespace ProjectEX.Editor.ProjectDebug
+namespace DevelopmentDiagnostics.Editor.Debug
 {
     [InitializeOnLoad]
     internal static class ProjectDebugCollector
@@ -13,8 +13,8 @@ namespace ProjectEX.Editor.ProjectDebug
         private const int k_MaximumEntryCount = 5000;
         private const int k_TrimEntryCount = 250;
         private const int k_MaximumPersistedEntryCountPerEnvironment = 500;
-        private const string k_EntriesSessionKey = "ProjectEX.Debug.Entries";
-        private const string k_EnvironmentSessionKey = "ProjectEX.Debug.Environment";
+        private const string k_EntriesSessionKey = "DevelopmentDiagnostics.Debug.Entries";
+        private const string k_EnvironmentSessionKey = "DevelopmentDiagnostics.Debug.Environment";
         private const string k_EditorDirectorySegment = "/Editor/";
 
         private static readonly List<ProjectDebugEntry> CollectedEntries = new List<ProjectDebugEntry>();

@@ -1,10 +1,10 @@
 using System;
 using System.Text;
-using ProjectEX.Debugging.Assertions;
+using DevelopmentDiagnostics.Assertions;
 using UnityEditor;
 using UnityEngine;
 
-namespace ProjectEX.Editor.ProjectAssertions
+namespace DevelopmentDiagnostics.Editor.Assertions
 {
     internal sealed class ProjectAssertPopupWindow : EditorWindow
     {

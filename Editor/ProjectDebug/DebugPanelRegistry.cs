@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using ProjectEX.Debugging.Assertions;
+using DevelopmentDiagnostics.Assertions;
 using UnityEditor;
 
-namespace ProjectEX.Editor.ProjectDebug
+namespace DevelopmentDiagnostics.Editor.Debug
 {
     internal static class DebugPanelRegistry
     {
