@@ -47,6 +47,10 @@ ProjectLog.Info("Player", "플레이어 초기화가 완료되었습니다.", th
 
 Editor 어셈블리는 Runtime만 참조하며 게임플레이 코드에는 의존하지 않습니다.
 
+## 라이선스
+
+이 프로젝트는 [MIT License](LICENSE.md)에 따라 사용할 수 있습니다.
+
 ## AI 사용 고지
 
 이 저장소의 코드와 문서 작성 과정에서 AI 도구인 OpenAI Codex를 사용했습니다. AI가 생성하거나 제안한 내용은 저장소 소유자가 검토하고 Unity에서 동작을 확인한 뒤 반영했습니다.
