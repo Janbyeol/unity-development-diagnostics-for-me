@@ -1,6 +1,20 @@
-# Project Development Diagnostics
+# Unity Development Diagnostics
 
-Unity 개인 프로젝트에서 개발 중 상태 오류와 진단 로그를 빠르게 확인하기 위한 임베디드 패키지입니다. 일반 릴리스 빌드에서는 `UNITY_ASSERTIONS` 조건이 빠질 때 Assert와 Log 호출 및 인자 평가가 제거됩니다.
+Unity 프로젝트에서 개발 중 상태 오류와 진단 로그를 빠르게 확인하기 위한 UPM 패키지입니다. 일반 릴리스 빌드에서는 `UNITY_ASSERTIONS` 조건이 빠질 때 Assert와 Log 호출 및 인자 평가가 제거됩니다.
+
+## 설치
+
+Unity 프로젝트의 `Packages/manifest.json`에 사용할 버전 태그와 함께 Git URL을 추가합니다.
+
+```json
+"com.github.janbyeol.development-diagnostics": "https://github.com/Janbyeol/unity-development-diagnostics-for-me.git#v0.1.1"
+```
+
+패키지를 직접 수정하며 개발할 때는 로컬 저장소 경로를 연결할 수 있습니다.
+
+```json
+"com.github.janbyeol.development-diagnostics": "file:../../UnityPackages/development-diagnostics"
+```
 
 ## 포함 기능
 
@@ -32,3 +46,7 @@ ProjectLog.Info("Player", "플레이어 초기화가 완료되었습니다.", th
 - `DevelopmentDiagnostics.Editor`: 팝업, 설정, 수집기와 Debug Window
 
 Editor 어셈블리는 Runtime만 참조하며 게임플레이 코드에는 의존하지 않습니다.
+
+## AI 사용 고지
+
+이 저장소의 코드와 문서 작성 과정에서 AI 도구인 OpenAI Codex를 사용했습니다. AI가 생성하거나 제안한 내용은 저장소 소유자가 검토하고 Unity에서 동작을 확인한 뒤 반영했습니다.

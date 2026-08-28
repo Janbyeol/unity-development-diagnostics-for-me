@@ -1,0 +1,20 @@
+# Unity generated directories
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Ll]ogs/
+
+# IDE generated files
+.vs/
+.idea/
+*.csproj
+*.sln
+*.slnx
+*.user
+*.DotSettings.user
+
+# Operating system generated files
+.DS_Store
+Thumbs.db
+
+# Unity .meta files are intentionally tracked to preserve asset GUIDs.
