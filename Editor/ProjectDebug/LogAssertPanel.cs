@@ -52,7 +52,7 @@ namespace DevelopmentDiagnostics.Editor.Debug
         private int m_allEntryCount;
         private int m_playEntryCount;
         private int m_editorEntryCount;
-        [FormerlySerializedAs("_detailHeight"),SerializeField] private float m_detailHeight = k_DefaultDetailHeight;
+        private float m_detailHeight = k_DefaultDetailHeight;
         private GUIStyle m_rowTextStyle;
         private GUIStyle m_rowMetadataStyle;
         private GUIStyle m_detailMessageStyle;
