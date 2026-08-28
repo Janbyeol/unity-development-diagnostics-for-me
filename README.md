@@ -1,6 +1,6 @@
-# Project EX Development Diagnostics
+# Project Development Diagnostics
 
-Unity 프로젝트에서 개발 중 상태 오류와 진단 로그를 빠르게 확인하기 위한 임베디드 패키지입니다. 일반 릴리스 빌드에서는 `UNITY_ASSERTIONS` 조건이 빠질 때 Assert와 Log 호출 및 인자 평가가 제거됩니다.
+Unity 개인 프로젝트에서 개발 중 상태 오류와 진단 로그를 빠르게 확인하기 위한 임베디드 패키지입니다. 일반 릴리스 빌드에서는 `UNITY_ASSERTIONS` 조건이 빠질 때 Assert와 Log 호출 및 인자 평가가 제거됩니다.
 
 ## 포함 기능
 
