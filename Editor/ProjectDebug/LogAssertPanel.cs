@@ -10,13 +10,6 @@ namespace DevelopmentDiagnostics.Editor.Debug
 {
     internal sealed class LogAssertPanel : IDebugPanel
     {
-        private enum EnvironmentFilter
-        {
-            All,
-            PlaySession,
-            Editor
-        }
-
         private const string k_AllTagsLabel = "All Tags";
         private const float k_RowHeight = 34f;
         private const float k_SeverityStripeWidth = 4f;
@@ -29,29 +22,14 @@ namespace DevelopmentDiagnostics.Editor.Debug
         private static readonly int DetailSplitterControlHash =
             "ProjectDebugDetailSplitter".GetHashCode();
 
-        private readonly List<ProjectDebugEntry> m_filteredEntries = new List<ProjectDebugEntry>();
+        private readonly LogAssertFilter m_filter = new LogAssertFilter();
 
         private Vector2 m_listScrollPosition;
         private Vector2 m_messageScrollPosition;
         private Vector2 m_metadataScrollPosition;
         private ProjectDebugEntry m_selectedEntry;
-        private string m_searchText = string.Empty;
-        private string m_selectedTag = k_AllTagsLabel;
-        private EnvironmentFilter m_environmentFilter = EnvironmentFilter.All;
-        private bool m_showLogs = true;
-        private bool m_showAsserts = true;
-        private bool m_showInfo = true;
-        private bool m_showWarning = true;
-        private bool m_showError = true;
-        private bool m_showNormalAssert = true;
-        private bool m_showCriticalAssert = true;
         private bool m_autoScroll = true;
         private bool m_scrollToBottom;
-        private int m_logEntryCount;
-        private int m_assertEntryCount;
-        private int m_allEntryCount;
-        private int m_playEntryCount;
-        private int m_editorEntryCount;
         private float m_detailHeight = k_DefaultDetailHeight;
         private GUIStyle m_rowTextStyle;
         private GUIStyle m_rowMetadataStyle;
@@ -94,7 +72,7 @@ namespace DevelopmentDiagnostics.Editor.Debug
             m_availableRect = availableRect;
             EnsureStyles();
             m_detailHeight = ClampDetailHeight(m_detailHeight);
-            RebuildFilteredEntries();
+            m_filter.Rebuild(ProjectDebugCollector.Entries);
             ValidateSelection();
 
             DrawMainToolbar();
@@ -150,7 +128,7 @@ namespace DevelopmentDiagnostics.Editor.Debug
 
             GUIContent clearContent = new GUIContent(
                 "Clear",
-                m_environmentFilter == EnvironmentFilter.All
+                m_filter.Environment == LogAssertEnvironmentFilter.All
                     ? "모든 Project Debug 기록을 삭제합니다."
                     : "현재 환경 탭의 Project Debug 기록을 삭제합니다.");
             if (GUILayout.Button(clearContent, EditorStyles.toolbarButton, GUILayout.Width(52f)))
@@ -160,43 +138,43 @@ namespace DevelopmentDiagnostics.Editor.Debug
             }
 
             int selectedEnvironmentIndex = GUILayout.Toolbar(
-                (int)m_environmentFilter,
+                (int)m_filter.Environment,
                 new[]
                 {
-                    $"All ({m_allEntryCount})",
-                    $"Play ({m_playEntryCount})",
-                    $"Editor ({m_editorEntryCount})"
+                    $"All ({m_filter.AllEntryCount})",
+                    $"Play ({m_filter.PlayEntryCount})",
+                    $"Editor ({m_filter.EditorEntryCount})"
                 },
                 EditorStyles.toolbarButton,
                 GUILayout.Width(240f));
-            if (selectedEnvironmentIndex != (int)m_environmentFilter)
+            if (selectedEnvironmentIndex != (int)m_filter.Environment)
             {
-                SelectEnvironmentFilter((EnvironmentFilter)selectedEnvironmentIndex);
+                SelectEnvironmentFilter((LogAssertEnvironmentFilter)selectedEnvironmentIndex);
             }
 
             GUILayout.Space(6f);
-            m_showLogs = GUILayout.Toggle(
-                m_showLogs,
-                $"Logs ({m_logEntryCount})",
+            m_filter.ShowLogs = GUILayout.Toggle(
+                m_filter.ShowLogs,
+                $"Logs ({m_filter.LogEntryCount})",
                 EditorStyles.toolbarButton,
                 GUILayout.Width(88f));
-            m_showAsserts = GUILayout.Toggle(
-                m_showAsserts,
-                $"Asserts ({m_assertEntryCount})",
+            m_filter.ShowAsserts = GUILayout.Toggle(
+                m_filter.ShowAsserts,
+                $"Asserts ({m_filter.AssertEntryCount})",
                 EditorStyles.toolbarButton,
                 GUILayout.Width(96f));
 
             GUILayout.FlexibleSpace();
 
-            m_searchText = GUILayout.TextField(
-                m_searchText,
+            m_filter.SearchText = GUILayout.TextField(
+                m_filter.SearchText,
                 EditorStyles.toolbarSearchField,
                 GUILayout.MinWidth(160f),
                 GUILayout.MaxWidth(320f));
 
             if (GUILayout.Button("×", EditorStyles.toolbarButton, GUILayout.Width(24f)))
             {
-                m_searchText = string.Empty;
+                m_filter.SearchText = string.Empty;
                 GUI.FocusControl(null);
             }
 
@@ -207,21 +185,33 @@ namespace DevelopmentDiagnostics.Editor.Debug
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 
-            m_showInfo = DrawSeverityToggle(m_showInfo, "Info", ProjectDebugSeverity.Info);
-            m_showWarning = DrawSeverityToggle(m_showWarning, "Warning", ProjectDebugSeverity.Warning);
-            m_showError = DrawSeverityToggle(m_showError, "Error", ProjectDebugSeverity.Error);
-            m_showNormalAssert = DrawSeverityToggle(
-                m_showNormalAssert,
+            m_filter.ShowInfo = DrawSeverityToggle(
+                m_filter.ShowInfo,
+                "Info",
+                ProjectDebugSeverity.Info);
+            m_filter.ShowWarning = DrawSeverityToggle(
+                m_filter.ShowWarning,
+                "Warning",
+                ProjectDebugSeverity.Warning);
+            m_filter.ShowError = DrawSeverityToggle(
+                m_filter.ShowError,
+                "Error",
+                ProjectDebugSeverity.Error);
+            m_filter.ShowNormalAssert = DrawSeverityToggle(
+                m_filter.ShowNormalAssert,
                 "Normal Assert",
                 ProjectDebugSeverity.NormalAssert);
-            m_showCriticalAssert = DrawSeverityToggle(
-                m_showCriticalAssert,
+            m_filter.ShowCriticalAssert = DrawSeverityToggle(
+                m_filter.ShowCriticalAssert,
                 "Critical Assert",
                 ProjectDebugSeverity.CriticalAssert);
 
             GUILayout.Space(8f);
 
-            if (GUILayout.Button(m_selectedTag, EditorStyles.toolbarDropDown, GUILayout.Width(150f)))
+            string selectedTagLabel = m_filter.HasSelectedTag
+                ? m_filter.SelectedTag
+                : k_AllTagsLabel;
+            if (GUILayout.Button(selectedTagLabel, EditorStyles.toolbarDropDown, GUILayout.Width(150f)))
             {
                 ShowTagMenu();
             }
@@ -274,6 +264,7 @@ namespace DevelopmentDiagnostics.Editor.Debug
 
         private void DrawEntryList()
         {
+            IReadOnlyList<ProjectDebugEntry> filteredEntries = m_filter.FilteredEntries;
             Rect listRect = GUILayoutUtility.GetRect(
                 100f,
                 10000f,
@@ -283,7 +274,7 @@ namespace DevelopmentDiagnostics.Editor.Debug
                 GUILayout.ExpandHeight(true));
             GUI.Box(listRect, GUIContent.none, EditorStyles.helpBox);
 
-            float contentHeight = Mathf.Max(listRect.height, m_filteredEntries.Count * k_RowHeight);
+            float contentHeight = Mathf.Max(listRect.height, filteredEntries.Count * k_RowHeight);
             Rect contentRect = new Rect(
                 0f,
                 0f,
@@ -304,7 +295,7 @@ namespace DevelopmentDiagnostics.Editor.Debug
             int firstVisibleIndex = Mathf.Max(0, Mathf.FloorToInt(m_listScrollPosition.y / k_RowHeight));
             int visibleRowCount = Mathf.CeilToInt(listRect.height / k_RowHeight) + 1;
             int lastVisibleIndex = Mathf.Min(
-                m_filteredEntries.Count,
+                filteredEntries.Count,
                 firstVisibleIndex + visibleRowCount);
 
             for (int index = firstVisibleIndex; index < lastVisibleIndex; index++)
@@ -314,12 +305,12 @@ namespace DevelopmentDiagnostics.Editor.Debug
                     index * k_RowHeight,
                     contentRect.width,
                     k_RowHeight);
-                DrawEntryRow(m_filteredEntries[index], rowRect, index);
+                DrawEntryRow(filteredEntries[index], rowRect, index);
             }
 
             GUI.EndScrollView();
 
-            if (m_filteredEntries.Count == 0)
+            if (filteredEntries.Count == 0)
             {
                 GUI.Label(listRect, "표시할 Project Log 또는 Assert가 없습니다.", EditorStyles.centeredGreyMiniLabel);
             }
@@ -571,108 +562,9 @@ namespace DevelopmentDiagnostics.Editor.Debug
             EditorGUILayout.EndHorizontal();
         }
 
-        private void RebuildFilteredEntries()
+        private void SelectEnvironmentFilter(LogAssertEnvironmentFilter environmentFilter)
         {
-            m_filteredEntries.Clear();
-            m_logEntryCount = 0;
-            m_assertEntryCount = 0;
-            m_playEntryCount = 0;
-            m_editorEntryCount = 0;
-            IReadOnlyList<ProjectDebugEntry> entries = ProjectDebugCollector.Entries;
-            m_allEntryCount = entries.Count;
-
-            for (int index = 0; index < entries.Count; index++)
-            {
-                ProjectDebugEntry entry = entries[index];
-                if (entry.Environment == ProjectDebugEnvironment.PlaySession)
-                {
-                    m_playEntryCount++;
-                }
-                else
-                {
-                    m_editorEntryCount++;
-                }
-
-                if (!PassesEnvironmentFilter(entry))
-                {
-                    continue;
-                }
-
-                if (entry.Type == ProjectDebugEntryType.Log)
-                {
-                    m_logEntryCount++;
-                }
-                else
-                {
-                    m_assertEntryCount++;
-                }
-
-                if (PassesFilters(entry))
-                {
-                    m_filteredEntries.Add(entry);
-                }
-            }
-        }
-
-        private bool PassesFilters(ProjectDebugEntry entry)
-        {
-            if (!PassesEnvironmentFilter(entry))
-            {
-                return false;
-            }
-
-            if (entry.Type == ProjectDebugEntryType.Log && !m_showLogs)
-            {
-                return false;
-            }
-
-            if (entry.Type == ProjectDebugEntryType.Assert && !m_showAsserts)
-            {
-                return false;
-            }
-
-            if (!IsSeverityVisible(entry.Severity))
-            {
-                return false;
-            }
-
-            if (m_selectedTag != k_AllTagsLabel &&
-                (entry.Type != ProjectDebugEntryType.Log ||
-                 !string.Equals(entry.Tag, m_selectedTag, StringComparison.OrdinalIgnoreCase)))
-            {
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(m_searchText))
-            {
-                return true;
-            }
-
-            string searchText = m_searchText.Trim();
-            return ContainsIgnoreCase(entry.Message, searchText) ||
-                ContainsIgnoreCase(entry.Tag, searchText) ||
-                ContainsIgnoreCase(entry.MemberName, searchText) ||
-                ContainsIgnoreCase(entry.FilePath, searchText);
-        }
-
-        private bool PassesEnvironmentFilter(ProjectDebugEntry entry)
-        {
-            switch (m_environmentFilter)
-            {
-                case EnvironmentFilter.PlaySession:
-                    return entry.Environment == ProjectDebugEnvironment.PlaySession;
-
-                case EnvironmentFilter.Editor:
-                    return entry.Environment == ProjectDebugEnvironment.Editor;
-
-                default:
-                    return true;
-            }
-        }
-
-        private void SelectEnvironmentFilter(EnvironmentFilter environmentFilter)
-        {
-            m_environmentFilter = environmentFilter;
+            m_filter.Environment = environmentFilter;
             m_selectedEntry = null;
             m_listScrollPosition = Vector2.zero;
             m_scrollToBottom = true;
@@ -681,13 +573,13 @@ namespace DevelopmentDiagnostics.Editor.Debug
 
         private void ClearSelectedEnvironment()
         {
-            switch (m_environmentFilter)
+            switch (m_filter.Environment)
             {
-                case EnvironmentFilter.PlaySession:
+                case LogAssertEnvironmentFilter.PlaySession:
                     ProjectDebugCollector.Clear(ProjectDebugEnvironment.PlaySession);
                     break;
 
-                case EnvironmentFilter.Editor:
+                case LogAssertEnvironmentFilter.Editor:
                     ProjectDebugCollector.Clear(ProjectDebugEnvironment.Editor);
                     break;
 
@@ -697,41 +589,17 @@ namespace DevelopmentDiagnostics.Editor.Debug
             }
         }
 
-        private bool IsSeverityVisible(ProjectDebugSeverity severity)
-        {
-            switch (severity)
-            {
-                case ProjectDebugSeverity.Info:
-                    return m_showInfo;
-
-                case ProjectDebugSeverity.Warning:
-                    return m_showWarning;
-
-                case ProjectDebugSeverity.Error:
-                    return m_showError;
-
-                case ProjectDebugSeverity.NormalAssert:
-                    return m_showNormalAssert;
-
-                case ProjectDebugSeverity.CriticalAssert:
-                    return m_showCriticalAssert;
-
-                default:
-                    return true;
-            }
-        }
-
         private void ShowTagMenu()
         {
             GenericMenu menu = new GenericMenu();
             menu.AddItem(
                 new GUIContent(k_AllTagsLabel),
-                m_selectedTag == k_AllTagsLabel,
-                () => SelectTag(k_AllTagsLabel));
+                !m_filter.HasSelectedTag,
+                () => SelectTag(null));
 
             foreach (string tag in ProjectDebugCollector.KnownTags)
             {
-                if (!IsTagKnownInCurrentEnvironment(tag))
+                if (!m_filter.IsTagAvailable(tag))
                 {
                     continue;
                 }
@@ -739,7 +607,10 @@ namespace DevelopmentDiagnostics.Editor.Debug
                 string capturedTag = tag;
                 menu.AddItem(
                     new GUIContent(capturedTag),
-                    string.Equals(m_selectedTag, capturedTag, StringComparison.OrdinalIgnoreCase),
+                    string.Equals(
+                        m_filter.SelectedTag,
+                        capturedTag,
+                        StringComparison.OrdinalIgnoreCase),
                     () => SelectTag(capturedTag));
             }
 
@@ -748,7 +619,7 @@ namespace DevelopmentDiagnostics.Editor.Debug
 
         private void SelectTag(string tag)
         {
-            m_selectedTag = tag;
+            m_filter.SelectTag(tag);
             RequestRepaint();
         }
 
@@ -758,28 +629,6 @@ namespace DevelopmentDiagnostics.Editor.Debug
             {
                 m_selectedEntry = null;
             }
-
-            if (m_selectedTag != k_AllTagsLabel && !IsTagKnownInCurrentEnvironment(m_selectedTag))
-            {
-                m_selectedTag = k_AllTagsLabel;
-            }
-        }
-
-        private bool IsTagKnownInCurrentEnvironment(string tag)
-        {
-            IReadOnlyList<ProjectDebugEntry> entries = ProjectDebugCollector.Entries;
-            for (int index = 0; index < entries.Count; index++)
-            {
-                ProjectDebugEntry entry = entries[index];
-                if (entry.Type == ProjectDebugEntryType.Log &&
-                    PassesEnvironmentFilter(entry) &&
-                    string.Equals(entry.Tag, tag, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         private void HandleEntriesChanged()
@@ -945,10 +794,5 @@ namespace DevelopmentDiagnostics.Editor.Debug
                 : message.Replace('\r', ' ').Replace('\n', ' ');
         }
 
-        private static bool ContainsIgnoreCase(string source, string value)
-        {
-            return !string.IsNullOrEmpty(source) &&
-                source.IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
     }
 }
