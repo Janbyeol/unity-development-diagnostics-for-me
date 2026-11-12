@@ -1,0 +1,14 @@
+{
+    "name": "DevelopmentDiagnostics.Editor.Tests",
+    "rootNamespace": "DevelopmentDiagnostics.Tests",
+    "references": [
+        "DevelopmentDiagnostics.Tests"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "autoReferenced": false
+}

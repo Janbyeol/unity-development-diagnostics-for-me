@@ -9,7 +9,7 @@ Unity 프로젝트의 개발 중 상태 오류와 진단 로그를 기록하는 
 Unity 프로젝트의 `Packages/manifest.json`에서 `dependencies`에 다음 항목을 추가합니다. 이미 패키지가 설치되어 있으면 해당 항목의 URL을 바꿉니다.
 
 ```json
-"com.github.janbyeol.development-diagnostics": "https://github.com/Janbyeol/unity-development-diagnostics-for-me.git#v0.3.1"
+"com.github.janbyeol.development-diagnostics": "https://github.com/Janbyeol/unity-development-diagnostics-for-me.git#v0.3.2"
 ```
 
 Editor에서 설치하려면 `Window > Package Manager`를 열고 `Install package from git URL`에서 같은 URL을 입력합니다. 태그를 지정하면 팀원과 CI가 같은 버전을 사용합니다. [Unity Git 패키지 문서](https://docs.unity3d.com/6000.0/Documentation/Manual/upm-git.html)
@@ -115,6 +115,18 @@ Debug Window는 두 Console 전달 옵션과 별도로 기록을 수집합니다
 3. 실행 로그에서 `[Project Assert/Normal]`, `[Project Assert/Critical]`, `[Project Log/`를 검색합니다. 실제로 호출된 코드의 진단 메시지가 여기에 남습니다.
 
 Unity Test Framework에서 의도적으로 `Critical` 실패를 검증할 때는 예외를 검사합니다. Console 전달을 켠 테스트에서는 `LogAssert.Expect(LogType.Assert, ...)`로 예상하는 메시지도 미리 등록합니다. [Unity Test Framework `LogAssert` 문서](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/api/UnityEngine.TestTools.LogAssert.html)
+
+### 실패 이벤트 구독자의 예외 처리
+
+`ProjectAssert.Failed`는 실패 시점의 구독자 목록을 등록 순서대로 호출합니다. 한 구독자가 예외를 던져도 나머지 구독자는 같은 메시지·호출 위치·콜스택을 전달받습니다. 통지가 끝나면 `Normal`은 호출부로 돌아오고, `Critical`은 원래 Assert 메시지를 가진 `InvalidOperationException`을 던집니다.
+
+구독자 예외는 `[Project Assert/Subscriber]` 접두사와 예외 내용·스택을 포함한 Unity Warning으로 기록합니다. 이 경고는 `Assert To Unity Console` 설정과 별도로 출력됩니다. 커스텀 `ILogHandler`도 예외를 던지면 해당 경고를 남기지 못할 수 있지만, 나머지 구독자 통지와 Critical의 원래 예외 처리는 계속됩니다.
+
+구독자 오류를 의도적으로 발생시키는 테스트에서는 `LogAssert.Expect(LogType.Warning, ...)`로 경고를 등록할 수 있습니다. 모든 로그를 검사하는 테스트는 이 경고도 예상 로그에 포함해야 합니다. `ProjectLog.Written`의 구독자 예외 처리에는 이 정책이 적용되지 않습니다.
+
+### 패키지 회귀 테스트 실행
+
+Unity Test Framework를 설치한 프로젝트의 `Packages/manifest.json`에 `"testables": ["com.github.janbyeol.development-diagnostics"]`를 추가하면 패키지 테스트를 활성화할 수 있습니다. Test Runner의 EditMode와 PlayMode에서 `DevelopmentDiagnostics.Tests` 테스트를 실행합니다. 구독자 예외 격리, 원래 Critical 예외와 호출 위치 보존, 경고 출력 실패, `UNITY_ASSERTIONS`가 없는 호출부의 인자 평가 제거를 확인합니다.
 
 ## 어셈블리
 

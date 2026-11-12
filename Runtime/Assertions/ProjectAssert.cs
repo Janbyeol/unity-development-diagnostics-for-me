@@ -17,6 +17,7 @@ namespace DevelopmentDiagnostics.Assertions
 
         /// <summary>
         ///     Assert 실패가 발생했을 때 발행된다. Editor 팝업처럼 표시 방식이 필요한 도구가 구독한다.
+        ///     구독자 예외는 Warning으로 기록하고 격리하며, 나머지 구독자에게도 실패를 전달한다.
         /// </summary>
         public static event Action<ProjectAssertionFailure> Failed;
 
@@ -181,12 +182,46 @@ namespace DevelopmentDiagnostics.Assertions
                 }
             }
 
-            Action<ProjectAssertionFailure> failedHandler = Failed;
-            failedHandler?.Invoke(failure);
+            NotifyFailed(failure);
 
             if (severity == ProjectAssertSeverity.Critical)
             {
                 throw new InvalidOperationException(message);
+            }
+        }
+
+        private static void NotifyFailed(ProjectAssertionFailure failure)
+        {
+            Action<ProjectAssertionFailure> failedHandler = Failed;
+            if (failedHandler == null)
+            {
+                return;
+            }
+
+            foreach (Action<ProjectAssertionFailure> handler in failedHandler.GetInvocationList())
+            {
+                try
+                {
+                    handler(failure);
+                }
+                catch (Exception exception)
+                {
+                    LogSubscriberException(exception, failure.Context);
+                }
+            }
+        }
+
+        private static void LogSubscriberException(Exception exception, Object context)
+        {
+            try
+            {
+                // NOTE: 수집기 오류는 Console 전달 설정과 별도로 남긴다.
+                // Warning을 사용해 CI에서 원래 Critical 실패를 추가 오류 로그로 가리지 않는다.
+                Debug.LogWarning($"[Project Assert/Subscriber] Failed subscriber threw an exception:\n{exception}", context);
+            }
+            catch (Exception)
+            {
+                // NOTE: 커스텀 로그 핸들러의 예외도 구독자 통지와 원래 Critical 예외를 막지 않아야 한다.
             }
         }
 

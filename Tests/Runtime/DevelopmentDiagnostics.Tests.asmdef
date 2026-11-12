@@ -1,0 +1,11 @@
+{
+    "name": "DevelopmentDiagnostics.Tests",
+    "rootNamespace": "DevelopmentDiagnostics.Tests",
+    "references": [
+        "DevelopmentDiagnostics.Runtime"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "autoReferenced": false
+}
