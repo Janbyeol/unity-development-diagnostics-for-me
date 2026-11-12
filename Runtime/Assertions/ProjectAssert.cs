@@ -22,6 +22,7 @@ namespace DevelopmentDiagnostics.Assertions
 
         /// <summary>
         ///     Assert 실패를 Unity Console에도 기록할지 설정한다.
+        ///     Normal은 Warning으로, Critical은 Assert로 기록한다.
         /// </summary>
         /// <param name="logToConsole">실패를 Unity Console에도 기록하려면 참이다.</param>
         public static void ConfigureConsoleLogging(bool logToConsole)
@@ -89,7 +90,7 @@ namespace DevelopmentDiagnostics.Assertions
         }
 
         /// <summary>
-        ///     필수 조건이 거짓이면 Critical 단계 Assert를 보고한다.
+        ///     필수 조건이 거짓이면 Critical 단계 Assert를 보고한 뒤 예외를 던진다.
         ///     UNITY_ASSERTIONS가 없는 일반 릴리스 빌드에서는 호출과 인자 평가가 제거된다.
         /// </summary>
         /// <param name="condition">참이면 통과하고, 거짓이면 Assert를 발생시킬 조건이다.</param>
@@ -98,6 +99,7 @@ namespace DevelopmentDiagnostics.Assertions
         /// <param name="memberName">호출한 메서드 이름이다. 컴파일러가 자동으로 채운다.</param>
         /// <param name="filePath">호출한 소스 파일 경로다. 컴파일러가 자동으로 채운다.</param>
         /// <param name="lineNumber">호출한 소스 줄 번호다. 컴파일러가 자동으로 채운다.</param>
+        /// <exception cref="InvalidOperationException">조건이 거짓인 경우 발생한다.</exception>
         [Conditional("UNITY_ASSERTIONS")]
         public static void Critical(
             bool condition,
@@ -122,7 +124,7 @@ namespace DevelopmentDiagnostics.Assertions
         }
 
         /// <summary>
-        ///     현재 코드 경로가 실패 상태임을 Critical 단계 Assert로 보고한다.
+        ///     현재 코드 경로를 Critical 단계 Assert 실패로 보고한 뒤 예외를 던진다.
         ///     UNITY_ASSERTIONS가 없는 일반 릴리스 빌드에서는 호출과 인자 평가가 제거된다.
         /// </summary>
         /// <param name="message">실패 원인을 설명하는 메시지다.</param>
@@ -130,6 +132,7 @@ namespace DevelopmentDiagnostics.Assertions
         /// <param name="memberName">호출한 메서드 이름이다. 컴파일러가 자동으로 채운다.</param>
         /// <param name="filePath">호출한 소스 파일 경로다. 컴파일러가 자동으로 채운다.</param>
         /// <param name="lineNumber">호출한 소스 줄 번호다. 컴파일러가 자동으로 채운다.</param>
+        /// <exception cref="InvalidOperationException">이 메서드가 호출되면 발생한다.</exception>
         [Conditional("UNITY_ASSERTIONS")]
         public static void Critical(
             string message,
@@ -167,13 +170,24 @@ namespace DevelopmentDiagnostics.Assertions
 
             if (s_logToConsole)
             {
-                Debug.LogAssertion(
-                    $"[Project Assert/{severity}] {message}",
-                    context);
+                string consoleMessage = $"[Project Assert/{severity}] {message}";
+                if (severity == ProjectAssertSeverity.Critical)
+                {
+                    Debug.LogAssertion(consoleMessage, context);
+                }
+                else
+                {
+                    Debug.LogWarning(consoleMessage, context);
+                }
             }
 
             Action<ProjectAssertionFailure> failedHandler = Failed;
             failedHandler?.Invoke(failure);
+
+            if (severity == ProjectAssertSeverity.Critical)
+            {
+                throw new InvalidOperationException(message);
+            }
         }
 
         private static string CaptureStackTrace()

@@ -7,7 +7,7 @@ Unity 프로젝트에서 개발 중 상태 오류와 진단 로그를 빠르게 
 Unity 프로젝트의 `Packages/manifest.json`에 사용할 버전 태그와 함께 Git URL을 추가합니다.
 
 ```json
-"com.github.janbyeol.development-diagnostics": "https://github.com/Janbyeol/unity-development-diagnostics-for-me.git#v0.1.1"
+"com.github.janbyeol.development-diagnostics": "https://github.com/Janbyeol/unity-development-diagnostics-for-me.git#v0.2.0"
 ```
 
 패키지를 직접 수정하며 개발할 때는 로컬 저장소 경로를 연결할 수 있습니다.

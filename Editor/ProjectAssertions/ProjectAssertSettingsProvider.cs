@@ -62,7 +62,7 @@ namespace DevelopmentDiagnostics.Editor.Assertions
                 serializedSettings.FindProperty("m_assertLogToConsole"),
                 new GUIContent(
                     "Assert To Unity Console",
-                    "전용 팝업 및 Debug Window와 별개로 ProjectAssert를 Unity Console에도 기록합니다."));
+                    "Normal은 Warning으로, Critical은 Assert로 Unity Console에 기록합니다."));
             EditorGUILayout.PropertyField(
                 serializedSettings.FindProperty("m_projectLogToConsole"),
                 new GUIContent(
@@ -108,26 +108,27 @@ namespace DevelopmentDiagnostics.Editor.Assertions
             EditorGUILayout.LabelField("Test", EditorStyles.boldLabel);
 
             EditorGUILayout.BeginHorizontal();
+            bool raiseNormalAssert = GUILayout.Button("Raise Normal Assert");
+            bool raiseCriticalAssert = GUILayout.Button("Raise Critical Assert");
+            EditorGUILayout.EndHorizontal();
 
-            if (GUILayout.Button("Raise Normal Assert"))
+            EditorGUILayout.HelpBox(
+                "Critical은 실패 기록 후 예외를 던집니다. UNITY_ASSERTIONS가 없는 빌드에서는 Assert 호출과 인자 평가가 제거됩니다.",
+                MessageType.None);
+
+            if (raiseNormalAssert)
             {
                 ProjectAssert.Normal(
                     false,
                     "Project Assert의 Normal 단계 테스트입니다.... 신기하죠?");
             }
 
-            if (GUILayout.Button("Raise Critical Assert"))
+            if (raiseCriticalAssert)
             {
                 ProjectAssert.Critical(
                     false,
                     "Project Assert의 Critical 단계 테스트입니다... 신기하죠?");
             }
-
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.HelpBox(
-                "일반 릴리스 빌드에서는 UNITY_ASSERTIONS가 정의되지 않아 ProjectAssert 호출과 인자 평가가 제거됩니다.",
-                MessageType.None);
         }
     }
 }
