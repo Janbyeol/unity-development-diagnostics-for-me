@@ -2,7 +2,7 @@
     "name": "com.github.janbyeol.development-diagnostics",
     "version": "0.2.0",
     "displayName": "Unity Development Diagnostics",
-    "description": "Development-only Assert, structured logging, popup, and extensible Debug Window tools for Unity projects.",
+    "description": "Development-only assertions, structured logging, assertion popups, and a Debug Window for Unity projects.",
     "unity": "6000.0",
     "type": "tool",
     "hideInEditor": false,

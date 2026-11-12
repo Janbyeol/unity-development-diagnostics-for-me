@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace DevelopmentDiagnostics.Editor.Debug
 {
-    internal sealed class LogAssertPanel : IDebugPanel
+    internal sealed class LogAssertPanel
     {
         private const string k_AllTagsLabel = "All Tags";
         private const float k_RowHeight = 34f;
@@ -37,17 +36,7 @@ namespace DevelopmentDiagnostics.Editor.Debug
         private Action m_requestRepaint;
         private Rect m_availableRect;
 
-        /// <inheritdoc />
-        public string Id => "log-assert";
-
-        /// <inheritdoc />
-        public string DisplayName => "Logs / Asserts";
-
-        /// <inheritdoc />
-        public int Order => 0;
-
-        /// <inheritdoc />
-        public void OnEnable(Action requestRepaint)
+        internal void OnEnable(Action requestRepaint)
         {
             m_requestRepaint = requestRepaint;
             ProjectDebugCollector.Changed += HandleEntriesChanged;
@@ -59,15 +48,13 @@ namespace DevelopmentDiagnostics.Editor.Debug
             }
         }
 
-        /// <inheritdoc />
-        public void OnDisable()
+        internal void OnDisable()
         {
             ProjectDebugCollector.Changed -= HandleEntriesChanged;
             m_requestRepaint = null;
         }
 
-        /// <inheritdoc />
-        public void OnGUI(Rect availableRect)
+        internal void OnGUI(Rect availableRect)
         {
             m_availableRect = availableRect;
             EnsureStyles();
