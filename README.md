@@ -9,7 +9,7 @@ Unity 프로젝트의 개발 중 상태 오류와 진단 로그를 기록하는 
 Unity 프로젝트의 `Packages/manifest.json`에서 `dependencies`에 다음 항목을 추가합니다. 이미 패키지가 설치되어 있으면 해당 항목의 URL을 바꿉니다.
 
 ```json
-"com.github.janbyeol.development-diagnostics": "https://github.com/Janbyeol/unity-development-diagnostics-for-me.git#v0.3.0"
+"com.github.janbyeol.development-diagnostics": "https://github.com/Janbyeol/unity-development-diagnostics-for-me.git#v0.3.1"
 ```
 
 Editor에서 설치하려면 `Window > Package Manager`를 열고 `Install package from git URL`에서 같은 URL을 입력합니다. 태그를 지정하면 팀원과 CI가 같은 버전을 사용합니다. [Unity Git 패키지 문서](https://docs.unity3d.com/6000.0/Documentation/Manual/upm-git.html)

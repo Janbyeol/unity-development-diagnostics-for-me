@@ -24,6 +24,12 @@ namespace DevelopmentDiagnostics.Editor.Assertions
         static ProjectAssertEditorController()
         {
             ApplySettings();
+
+            if (Application.isBatchMode)
+            {
+                return;
+            }
+
             ProjectAssert.Failed += HandleAssertFailed;
             EditorApplication.playModeStateChanged += HandlePlayModeStateChanged;
             RestorePersistedFailures();

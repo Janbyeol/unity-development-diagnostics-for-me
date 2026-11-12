@@ -1,6 +1,6 @@
 {
     "name": "com.github.janbyeol.development-diagnostics",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "displayName": "Unity Development Diagnostics",
     "description": "Development-only assertions, structured logging, assertion popups, and a Debug Window for Unity projects.",
     "unity": "6000.0",
